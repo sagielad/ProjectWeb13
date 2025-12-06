@@ -8,25 +8,26 @@
 </head>
 <body>
 
+    <!-- תמונת הרקע ברקע -->
+    <img class="bg-img" src="logo video/teacher photo.png" alt="תמונת רקע">
+
     <div class="login-container">
 
         <div class="logo-box">
             <img src="logo video/image-91fd0507-4527-4df1-abc1-899f46b1c512.png" alt="Logo" class="logo">
-          
         </div>
 
         <form class="login-form">
-            <label>שם משתמש</label>
+            <label for="username">שם משתמש</label>
             <input type="text" id="username" placeholder="הכנס שם משתמש">
 
-            <label>סיסמה</label>
+            <label for="password">סיסמה</label>
             <input type="password" id="password" placeholder="הכנס סיסמה">
 
             <button type="submit">התחבר</button>
             <p id="error-msg" class="error"></p>
         </form>
     </div>
-
 
     <script src="login.js"></script>
 </body>

@@ -1,0 +1,308 @@
+/* GLOBAL */
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    background: #f3f5fb;
+    font-family: "Poppins", sans-serif;
+    color: #111827;
+    scroll-behavior: smooth;
+}
+
+/* HEADER */
+header {
+    background: #1f3af5;
+    color: #ffffff;
+    padding: 16px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.35);
+}
+header .title-block {
+    display: flex;
+    flex-direction: column;
+}
+header .title-block span {
+    font-size: 13px;
+    opacity: 0.9;
+}
+#studentName {
+    font-size: 22px;
+    font-weight: 600;
+}
+header button {
+    background: #ffffff;
+    color: #1f3af5;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.25s;
+}
+header button:hover {
+    transform: translateY(-2px);
+    background: #facc15;
+}
+
+/* NAVBAR */
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+}
+nav button {
+    background: transparent;
+    border-radius: 999px;
+    border: 1px solid #1f3af5;
+    color: #1f3af5;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.25s;
+}
+nav button:hover {
+    background: #1f3af5;
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+/* LAYOUT */
+.main-container {
+    padding: 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(360px,1fr));
+    gap: 20px;
+}
+
+/* CARDS / SECTIONS */
+.section {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 18px 20px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+    transition: 0.25s;
+}
+.section:hover {
+    transform: translateY(-3px);
+}
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+.section-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+}
+.section-header span.label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6b7280;
+}
+
+/* PERSONAL INFO */
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+.info-row span.label {
+    font-weight: 600;
+    color: #4b5563;
+}
+.info-row span.value {
+    color: #111827;
+}
+
+/* GOALS BOX */
+#goalsBox {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.goal-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 5px;
+}
+.goal-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #eef2ff;
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 14px;
+}
+.goal-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.goal-status {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: #d1fae5;
+    color: #047857;
+}
+.goal-status.done {
+    background: #d1d5db;
+    color: #374151;
+}
+.goal-actions button {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 13px;
+    margin-left: 4px;
+    padding: 3px 6px;
+    border-radius: 6px;
+    transition: 0.2s;
+}
+.goal-actions button.complete {
+    color: #047857;
+}
+.goal-actions button.delete {
+    color: #b91c1c;
+}
+.goal-actions button:hover {
+    background: #e5e7eb;
+}
+
+/* GOAL INPUT */
+.goal-input-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+.goal-input-row input {
+    flex: 1;
+}
+input, textarea, select {
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 13px;
+    transition: 0.22s;
+}
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: #1f3af5;
+    box-shadow: 0 0 0 1px rgba(31,58,245,0.12);
+}
+
+/* BUTTONS */
+.btn {
+    border-radius: 999px;
+    border: none;
+    background: #1f3af5;
+    color: #ffffff;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.22s;
+}
+.btn:hover {
+    background: #111bb7;
+    transform: translateY(-1px);
+}
+
+/* LAST LESSON + HISTORY */
+textarea {
+    width: 100%;
+    resize: vertical;
+    min-height: 80px;
+}
+.lesson-form-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+.lesson-form-row input, .lesson-form-row select {
+    flex: 1;
+}
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+    max-height: 260px;
+    overflow-y: auto;
+}
+.history-card {
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    padding: 8px 10px;
+    background: #f9fafb;
+    font-size: 13px;
+}
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    font-weight: 500;
+    color: #111827;
+}
+.history-meta {
+    font-size: 11px;
+    color: #6b7280;
+}
+
+/* FILE UPLOAD */
+.file-box {
+    border: 2px dashed #cbd5f5;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    background: #f9fafb;
+    font-size: 13px;
+    color: #4b5563;
+}
+.file-box input[type="file"] {
+    margin-top: 8px;
+}
+.file-list {
+    margin-top: 10px;
+    font-size: 13px;
+}
+.file-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+/* SMALL SCROLLBAR FOR HISTORY */
+.history-list::-webkit-scrollbar {
+    width: 6px;
+}
+.history-list::-webkit-scrollbar-thumb {
+    background: #cbd5f5;
+    border-radius: 999px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .main-container {
+        padding: 16px;
+    }
+}

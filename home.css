@@ -25,13 +25,7 @@ body {
     border-radius: 12px;
     margin-bottom: 20px;
 }
-.time-display {
-    font-size: 14px;
-    margin-top: 3px;
-    color: #e3eaff;
-    font-weight: 500;
-    opacity: 0.9;
-}
+
 .home-header h1 {
     margin: 0;
     font-size: 22px;
@@ -284,7 +278,7 @@ body {
     border-radius: 6px;
     position: relative;
 
-    font-family:"Shadows Into Light", cursive;
+    font-family:"Shadows Into Light",'Varela Round', cursive;
     font-size: 16px;
     color: #333;
 
@@ -292,7 +286,9 @@ body {
     align-items: flex-start;
     justify-content: flex-start;
 
-    text-align: left;
+     text-align: start;
+    direction: auto;
+    unicode-bidi: plaintext;
     white-space: pre-wrap;
 
     box-shadow: 0 3px 8px rgba(0,0,0,0.15);
@@ -399,11 +395,11 @@ body {
     color: black;
 }
 #confirm-no:hover {
-    background-color: ;
+    background-color: #cbd5e1;
 }
 #edit-save:hover{
     background-color: #b91c1c;
 }
 #edit-cancel:hover{
-    background-color: #cbd5e1;
+    background-color:#cbd5e1 ;
 }

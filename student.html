@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Student Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="student.css">
+</head>
+
+<body>
+
+<header>
+    <div class="title-block">
+        <span>Student Dashboard</span>
+        <span id="studentName">Student Name</span>
+    </div>
+    <button onclick="window.location.href='home.html'">← Back</button>
+</header>
+
+<nav>
+    <button onclick="scrollToSection('info')">Overview</button>
+    <button onclick="scrollToSection('goals')">Goals</button>
+    <button onclick="scrollToSection('lastLesson')">Last Lesson</button>
+    <button onclick="scrollToSection('history')">Summaries History</button>
+    <button onclick="scrollToSection('files')">Files</button>
+</nav>
+
+<div class="main-container">
+
+    <!-- PERSONAL INFO -->
+    <section id="info" class="section">
+        <div class="section-header">
+            <h3>Personal Information</h3>
+            <span class="label">Student Details</span>
+        </div>
+
+        <div class="info-row"><span class="label">Email</span><span class="value">student@mail.com</span></div>
+        <div class="info-row"><span class="label">Phone</span><span class="value">054-123456</span></div>
+        <div class="info-row"><span class="label">Grade</span><span class="value">9th</span></div>
+        <div class="info-row"><span class="label">Main Subject</span><span class="value">Math & English</span></div>
+    </section>
+
+    <!-- GOALS BOX -->
+    <section id="goals" class="section">
+        <div class="section-header">
+            <h3>Learning Goals</h3>
+            <span class="label">Track & Manage</span>
+        </div>
+
+        <div id="goalsBox">
+            <div class="goal-list" id="goalsList"></div>
+
+            <div class="goal-input-row">
+                <input type="text" id="goalText" placeholder="New goal (e.g. Improve algebra basics)" />
+                <button class="btn" onclick="addGoal()">Add</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- LAST LESSON SUMMARY -->
+    <section id="lastLesson" class="section">
+        <div class="section-header">
+            <h3>Last Lesson Summary</h3>
+            <span class="label">Update & Save</span>
+        </div>
+
+        <div class="lesson-form-row">
+            <input type="date" id="lessonDate" />
+            <input type="text" id="lessonSubject" placeholder="Subject (e.g. Math)" />
+        </div>
+
+        <textarea id="lessonSummary" placeholder="Write what you covered in the last lesson..."></textarea>
+<button class="btn" style="margin-top:10px;" onclick="saveLessonSummary()">Save Summary</button>
+
+        <hr style="margin:20px 0;">
+
+        <h3 style="margin-bottom:6px;">Schedule Next Lesson</h3>
+
+        <div class="lesson-form-row">
+            <input type="date" id="nextLessonDate">
+            <input type="time" id="nextLessonTime">
+        </div>
+
+        <input type="text" id="nextLessonSubject" placeholder="Lesson subject (Math, English…)" />
+        <button class="btn" style="margin-top:10px;" onclick="saveNextLesson()">Add to schedule</button>
+
+        <p id="lessonSavedMsg" style="color:green;display:none;margin-top:6px;font-size:13px;">✔ Lesson added successfully</p>
+    </section>
+
+    <!-- HISTORY -->
+    <section id="history" class="section">
+        <div class="section-header">
+            <h3>Lesson Summaries History</h3>
+            <span class="label">All saved summaries</span>
+        </div>
+        <div id="historyList" class="history-list"></div>
+    </section>
+
+    <!-- FILES -->
+    <section id="files" class="section">
+        <div class="section-header">
+            <h3>Files</h3>
+            <span class="label">Upload & Track</span>
+        </div>
+
+        <div class="file-box">
+            <div>Upload worksheets, homework, or tests.</div>
+            <input type="file" id="fileInput" />
+        </div>
+
+        <div id="fileList" class="file-list"></div>
+    </section>
+
+</div>
+
+<script src="student.js"></script>
+</body>
+</html>
