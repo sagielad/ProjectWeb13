@@ -41,14 +41,25 @@
             </div>
 
             <div class="selected-student-box">
-                Selected student: <span id="selected-student">—</span>
+                
             </div>
 
             <div class="students-dropdown">
+                
                 <ul id="students-list"></ul>
             </div>
-        </section>
+            <div class="add-student-box">
+  <h3>Add Student</h3>
 
+  <input id="new-student-name" type="text" placeholder="Full name" />
+  <input id="new-student-phone" type="text" placeholder="Phone" />
+  <input id="new-student-email" type="text" placeholder="Email" />
+  <input id="new-student-grade" type="text" placeholder="Grade / Level" />
+  <button id="add-student-btn" type="button">Add Student</button>
+
+</div>
+
+        </section>
         <!-- 2. Upcoming Classes – cards -->
         <section class="calendar-section">
             <h2>Upcoming Classes</h2>
@@ -93,7 +104,9 @@
             </div>
         </div>
     </div>
-
+     <footer class="app-footer">
+        <span>© 2025 TutorHub</span>
+    </footer>
 
 <script src="home.js"></script>
 </body>

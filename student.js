@@ -1,107 +1,240 @@
-// === BASIC STUDENT NAME FROM localStorage ===
-const studentName = localStorage.getItem("selectedStudent") || "Student Name";
+// ===============================
+// BASIC STUDENT DATA
+// ===============================
+
+
+var studentName = localStorage.getItem("selectedStudent") || "Student Name";
 document.getElementById("studentName").textContent = studentName;
 
-// === KEYS PER STUDENT ===
-const goalsKey = "goals_" + studentName;
-const summariesKey = "summaries_" + studentName;
-const filesKey = "files_" + studentName;
+var goalsKey = "goals_" + studentName;
+var summariesKey = "summaries_" + studentName;
+var filesKey = "files_" + studentName;
 
-// === SCROLL TO SECTION ===
+
+// ===============================
+// SCROLL
+// ===============================
 function scrollToSection(id) {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+  var el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: "smooth" });
 }
 
-// ================= GOALS LOGIC =================
-let goals = [];
+// ===============================
+// PROFILE (VIEW)
+// ===============================
+renderStudentProfile();
 
-function loadGoals() {
-    const saved = localStorage.getItem(goalsKey);
-    goals = saved ? JSON.parse(saved) : [
-        { text: "Improve algebra basics", done: false },
-        { text: "Finish weekly homework on time", done: false }
-    ];
-    renderGoals();
+function renderStudentProfile() {
+  var profile = {};
+  try {
+    profile = JSON.parse(localStorage.getItem("student_profile_" + studentName) || "{}");
+  } catch (e) {
+    profile = {};
+  }
+
+  document.getElementById("profileEmail").textContent = profile.email || "—";
+  document.getElementById("profilePhone").textContent = profile.phone || "—";
+  document.getElementById("profileGrade").textContent = profile.grade || "—";
 }
 
-function saveGoals() {
-    localStorage.setItem(goalsKey, JSON.stringify(goals));
+// ===============================
+// MODAL HELPERS
+// ===============================
+function closeModalById(id) {
+  var m = document.getElementById(id);
+  if (m) m.style.display = "none";
 }
 
-function renderGoals() {
-    const container = document.getElementById("goalsList");
-    container.innerHTML = "";
+// ===============================
+// CONFIRM MODAL
+// ===============================
+function showConfirm(message, callback) {
+  var modal = document.getElementById("confirm_modal");
+  var text = document.getElementById("modal_text");
+  var yesBtn = document.getElementById("confirm-yes");
+  var noBtn = document.getElementById("confirm-no");
 
-    goals.forEach((g, index) => {
-        const div = document.createElement("div");
-        div.className = "goal-item";
+  if (!modal || !text || !yesBtn || !noBtn) {
+    callback(confirm(message));
+    return;
+  }
 
-        const left = document.createElement("div");
-        left.className = "goal-left";
+  text.textContent = message;
+  modal.style.display = "flex";
 
-        const status = document.createElement("span");
-        status.className = "goal-status" + (g.done ? " done" : "");
-        status.textContent = g.done ? "Completed" : "Active";
+  yesBtn.onclick = function () {
+    closeModalById("confirm_modal");
+    callback(true);
+  };
 
-        const text = document.createElement("span");
-        text.textContent = g.text;
-        if (g.done) {
-            text.style.textDecoration = "line-through";
-            text.style.color = "#6b7280";
+  noBtn.onclick = function () {
+    closeModalById("confirm_modal");
+    callback(false);
+  };
+}
+
+// ===============================
+// BUTTON BINDING
+// ===============================
+bindStudentButtons();
+
+function bindStudentButtons() {
+  var updateBtn = document.getElementById("updateStudentBtn");
+  var deleteBtn = document.getElementById("deleteStudentBtn");
+
+  if (updateBtn) updateBtn.onclick = openEditStudent;
+  if (deleteBtn) deleteBtn.onclick = deleteStudent;
+}
+
+// ===============================
+// EDIT STUDENT
+// ===============================
+function openEditStudent() {
+  var editModal = document.getElementById("edit_modal");
+  var emailEl = document.getElementById("edit_email");
+  var phoneEl = document.getElementById("edit_phone");
+  var gradeEl = document.getElementById("edit_grade");
+  var saveBtn = document.getElementById("edit-save");
+  var cancelBtn = document.getElementById("edit-cancel");
+
+  var profile = JSON.parse(
+    localStorage.getItem("student_profile_" + studentName) || "{}"
+  );
+
+  emailEl.value = profile.email || "";
+  phoneEl.value = profile.phone || "";
+  gradeEl.value = profile.grade || "";
+
+  editModal.style.display = "flex";
+
+  cancelBtn.onclick = function () {
+    closeModalById("edit_modal");
+  };
+
+  saveBtn.onclick = function () {
+    // Save without confirmation modal, just close after saving
+    var updated = {
+      name: studentName,
+      email: emailEl.value.trim(),
+      phone: phoneEl.value.trim(),
+      grade: gradeEl.value.trim()
+    };
+
+    localStorage.setItem(
+      "student_profile_" + studentName,
+      JSON.stringify(updated)
+    );
+
+    // Close modals and refresh the profile
+    closeModalById("edit_modal");
+    renderStudentProfile();
+  };
+}
+
+// ===============================
+// DELETE STUDENT (ONE CONFIRM ONLY)
+// ===============================
+function normalizeName(x) {
+  return String(x || "").trim().toLowerCase();
+}
+
+function removeStudentFromListKey(listKey, studentName) {
+  var raw = localStorage.getItem(listKey);
+  if (!raw) return;
+
+  var arr;
+  try {
+    arr = JSON.parse(raw);
+  } catch (e) {
+    return;
+  }
+
+  if (!Array.isArray(arr)) return;
+
+  var target = normalizeName(studentName);
+  var out = [];
+
+  for (var i = 0; i < arr.length; i++) {
+    var item = arr[i];
+
+    // אם זה אובייקט {name: "..."} או מחרוזת "..."
+    var nameVal = (item && typeof item === "object" && item.name != null) ? item.name : item;
+
+    if (normalizeName(nameVal) !== target) {
+      out.push(item);
+    }
+  }
+
+  localStorage.setItem(listKey, JSON.stringify(out));
+}
+
+function deleteStudent() {
+  showConfirm("Delete this student and all their data?", function (ok) {
+    if (!ok) return;
+
+    var target = normalizeName(studentName);
+
+    // ✅ 1) מוחק כל key שקשור לסטודנט (כולל lessons_, goals_, וכו')
+    // (בטוח גם אם אתה לא זוכר כל מפתח)
+    var keysToDelete = [];
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (!k) continue;
+
+      // מוחק את כל ה-prefixים המוכרים
+      var prefixes = ["student_profile_", "goals_", "summaries_", "files_", "lessons_"];
+      for (var p = 0; p < prefixes.length; p++) {
+        var pref = prefixes[p];
+        if (k.indexOf(pref) === 0) {
+          var namePart = k.substring(pref.length);
+          if (normalizeName(namePart) === target) {
+            keysToDelete.push(k);
+          }
         }
+      }
+    }
+    for (var d = 0; d < keysToDelete.length; d++) {
+      localStorage.removeItem(keysToDelete[d]);
+    }
 
-        left.appendChild(status);
-        left.appendChild(text);
+    // ✅ 2) מסיר את השם מכל “רשימות סטודנטים” אפשריות בדף HOME
+    // (כי לפעמים אצלך זה לא רק students_db)
+    removeStudentFromListKey("students_db", studentName);
+    removeStudentFromListKey("students", studentName);
+    removeStudentFromListKey("students_list", studentName);
+    removeStudentFromListKey("all_students", studentName);
 
-        const actions = document.createElement("div");
-        actions.className = "goal-actions";
+    // ✅ 3) מסיר שיעורים מהיומן הכללי אם קיים all_lessons
+    var allLessonsRaw = localStorage.getItem("all_lessons");
+    if (allLessonsRaw) {
+      var allLessons;
+      try {
+        allLessons = JSON.parse(allLessonsRaw);
+      } catch (e2) {
+        allLessons = null;
+      }
 
-        const btnComplete = document.createElement("button");
-        btnComplete.className = "complete";
-        btnComplete.textContent = g.done ? "↺" : "✓";
-        btnComplete.title = g.done ? "Mark as active" : "Mark as completed";
-        btnComplete.onclick = () => toggleGoalDone(index);
+      if (Array.isArray(allLessons)) {
+        var kept = [];
+        for (var j = 0; j < allLessons.length; j++) {
+          var st = (allLessons[j] && allLessons[j].student != null) ? allLessons[j].student : "";
+          if (normalizeName(st) !== target) {
+            kept.push(allLessons[j]);
+          }
+        }
+        localStorage.setItem("all_lessons", JSON.stringify(kept));
+      }
+    }
 
-        const btnDelete = document.createElement("button");
-        btnDelete.className = "delete";
-        btnDelete.textContent = "✕";
-        btnDelete.title = "Delete goal";
-        btnDelete.onclick = () => deleteGoal(index);
+    // ניקוי סטודנט נבחר
+    localStorage.removeItem("selectedStudent");
 
-        actions.appendChild(btnComplete);
-        actions.appendChild(btnDelete);
-
-        div.appendChild(left);
-        div.appendChild(actions);
-        container.appendChild(div);
-    });
+    // חזרה ל-Home (הרענון יבנה רשימה מחדש בלי השם)
+    window.location.href = "home.html";
+  });
 }
+//lesson summaries and history
 
-function addGoal() {
-    const input = document.getElementById("goalText");
-    const text = input.value.trim();
-    if (!text) return;
-
-    goals.unshift({ text, done: false });
-    input.value = "";
-    saveGoals();
-    renderGoals();
-}
-
-function toggleGoalDone(index) {
-    goals[index].done = !goals[index].done;
-    saveGoals();
-    renderGoals();
-}
-
-function deleteGoal(index) {
-    goals.splice(index, 1);
-    saveGoals();
-    renderGoals();
-}
-
-// ============== LESSON SUMMARIES HISTORY ==============
 let summaries = [];
 
 function loadSummaries() {
@@ -109,7 +242,7 @@ function loadSummaries() {
     summaries = saved ? JSON.parse(saved) : [];
     renderSummaries();
 }
-
+loadSummaries();
 function saveSummaries() {
     localStorage.setItem(summariesKey, JSON.stringify(summaries));
 }
@@ -220,54 +353,89 @@ function saveNextLesson() {
     }
 }
 
-// ============== FILES (UI ONLY, NO REAL UPLOAD) ==============
-let files = [];
 
-function loadFiles() {
-    const saved = localStorage.getItem(filesKey);
-    files = saved ? JSON.parse(saved) : [];
-    renderFiles();
-}
-
-function saveFiles() {
-    localStorage.setItem(filesKey, JSON.stringify(files));
-}
-
-function renderFiles() {
-    const list = document.getElementById("fileList");
-    list.innerHTML = "";
-
-    if (files.length === 0) {
-        list.textContent = "No files listed yet.";
-        return;
-    }
-
-    files.forEach((f) => {
-        const row = document.createElement("div");
-        row.className = "file-item";
-        row.innerHTML = `<span>${f.name}</span><span style="font-size:11px;color:#6b7280;">${f.date}</span>`;
-        list.appendChild(row);
-    });
-}
-
-const fileInput = document.getElementById("fileInput");
-if (fileInput) {
-    fileInput.addEventListener("change", (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        files.push({
-            name: file.name,
-            date: new Date().toLocaleString()
-        });
-
-        saveFiles();
-        renderFiles();
-        e.target.value = "";
-    });
-}
-
-// ============== INIT ON LOAD ==============
+// ===============================
+// GOALS
+// ===============================
+var goals = [];
 loadGoals();
-loadSummaries();
-loadFiles();
+
+function loadGoals() {
+  var saved = localStorage.getItem(goalsKey);
+  goals = saved ? JSON.parse(saved) : [];
+  renderGoals();
+}
+
+function saveGoals() {
+  localStorage.setItem(goalsKey, JSON.stringify(goals));
+}
+
+function renderGoals() {
+  var container = document.getElementById("goalsList");
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  for (var i = 0; i < goals.length; i++) {
+    (function (index) {
+      var g = goals[index];
+
+      var div = document.createElement("div");
+      div.className = "goal-item";
+
+      var left = document.createElement("div");
+      left.className = "goal-left";
+
+      var status = document.createElement("span");
+      status.className = "goal-status" + (g.done ? " done" : "");
+      status.textContent = g.done ? "Completed" : "Active";
+
+      var text = document.createElement("span");
+      text.textContent = g.text;
+
+      left.appendChild(status);
+      left.appendChild(text);
+
+      var actions = document.createElement("div");
+      actions.className = "goal-actions";
+
+      var toggle = document.createElement("button");
+      toggle.className = "complete";
+      toggle.textContent = g.done ? "↺" : "✓";
+      toggle.onclick = function () {
+        goals[index].done = !goals[index].done;
+        saveGoals();
+        renderGoals();
+      };
+
+      var del = document.createElement("button");
+      del.className = "delete";
+      del.textContent = "✕";
+      del.onclick = function () {
+        goals.splice(index, 1);
+        saveGoals();
+        renderGoals();
+      };
+
+      actions.appendChild(toggle);
+      actions.appendChild(del);
+
+      div.appendChild(left);
+      div.appendChild(actions);
+      container.appendChild(div);
+    })(i);
+  }
+}
+
+function addGoal() {
+  var input = document.getElementById("goalText");
+  if (!input) return;
+
+  var text = input.value.trim();
+  if (!text) return;
+
+  goals.unshift({ text: text, done: false });
+  input.value = "";
+  saveGoals();
+  renderGoals();
+}

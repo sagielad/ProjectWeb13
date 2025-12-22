@@ -12,7 +12,6 @@ body {
     margin: 0 auto;
     padding: 20px;
 }
-
 /* ===== Header ===== */
 
 .home-header {
@@ -65,7 +64,7 @@ body {
     padding: 15px 20px;
     border-radius: 12px;
     box-shadow: 0 0 8px rgba(0,0,0,0.05);
-    grid-row: 1 / 3; /* takes two rows */
+    grid-row: 1 / 3; 
 }
 
 .students-section h2 {
@@ -75,7 +74,6 @@ body {
 .search-bar {
     margin-bottom: 10px;
 }
-
 #student-search {
     width: 100%;
     padding: 8px;
@@ -83,15 +81,8 @@ body {
     border: 1px solid #cbd5e1;
     font-size: 14px;
 }
-
-/* Selected student line */
-.selected-student-box {
-    margin-bottom: 10px;
-    font-size: 14px;
-    color: #334155;
-    background: #f1f5f9;
-    padding: 6px 10px;
-    border-radius: 8px;
+.home-container h2 {
+  font-size: 18px;
 }
 
 /* Dropdown container style */
@@ -134,16 +125,18 @@ body {
     padding: 15px 20px;
     border-radius: 12px;
     box-shadow: 0 0 8px rgba(0,0,0,0.05);
+    
 }
 
 .calendar-section h2 {
-    margin-top: 0;
+    margin-top:0;
 }
 
 .stack-container {
     width: 100%;
     max-width: 380px;
     margin: 0 auto;
+    margin-right: 100px;
 }
 
 .card {
@@ -151,10 +144,11 @@ body {
     background: #ffffff;
     border-radius: 18px;
     padding: 18px 20px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     cursor: pointer;
     box-shadow: 0 10px 25px rgba(0,0,0,0.12);
     transition: 0.4s ease;
+
 }
 
 .card:hover {
@@ -383,7 +377,7 @@ body {
     font-size: 16px;
 }
 
-#confirm-Yes{
+#confirm-yes{
     background-color:#ef4444;
     color: white;
 }
@@ -402,4 +396,107 @@ body {
 }
 #edit-cancel:hover{
     background-color:#cbd5e1 ;
+}
+/* ===== Add Student block (students section) ===== */
+
+.students-section h3 {
+    margin: 14px 0 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #334155;
+}
+
+/* עוטף וירטואלי – כל השדות */
+.students-section #new-student-name,
+.students-section #new-student-phone,
+.students-section #new-student-email,
+.students-section #new-student-grade {
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    font-size: 14px;
+    background: #ffffff;
+    outline: none;
+    transition: 0.2s;
+}
+
+/* Focus */
+.students-section #new-student-name:focus,
+.students-section #new-student-phone:focus,
+.students-section #new-student-email:focus,
+.students-section #new-student-grade:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* Add Student button */
+#add-student-btn {
+    width: 100%;
+    margin-top: 6px;
+    padding: 10px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#add-student-btn:hover {
+    background: #1e40af;
+    transform: translateY(-1px);
+}
+
+/* ===== Optional: compact grid on wide screens ===== */
+@media (min-width: 600px) {
+    .students-section #new-student-name,
+    .students-section #new-student-phone,
+    .students-section #new-student-email,
+    .students-section #new-student-grade {
+        display: inline-block;
+        width: calc(50% - 6px);
+    }
+
+    .students-section #new-student-name,
+    .students-section #new-student-email {
+        margin-right: 12px;
+    }
+}
+.app-footer{
+  
+  bottom: 14px;
+  width: 100%;
+  text-align: center;
+  padding-top:10px;
+  font-size: 12px;
+  color: rgba(31, 41, 55, 0.65);
+  letter-spacing: 0.04em;
+  
+}
+@media (max-width: 750px){
+  .home-main{
+    grid-template-columns: 1fr; 
+  }
+  .students-section{
+    grid-row: auto;
+  }
+  .stack-container{
+    max-width: 100%;
+    margin: 0 auto;
+    margin-right: 0;
+  }
+
+  #notes-list{
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 520px){
+  #notes-list{
+    grid-template-columns: 1fr;
+  }
 }

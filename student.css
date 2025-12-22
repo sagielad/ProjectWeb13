@@ -77,12 +77,19 @@ nav button:hover {
 }
 
 /* LAYOUT */
-.main-container {
-    padding: 24px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(360px,1fr));
-    gap: 20px;
+.main-container{
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
 }
+@media (max-width: 750px){
+  .main-container{
+    grid-template-columns: 1fr; /* ✅ טור אחד במובייל */
+  }
+}
+
 
 /* CARDS / SECTIONS */
 .section {
@@ -130,6 +137,21 @@ nav button:hover {
 }
 
 /* GOALS BOX */
+.main-container{
+  padding: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 20px;
+  align-items: start;
+}
+
+.left-column,
+.right-column{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
 #goalsBox {
     display: flex;
     flex-direction: column;
@@ -305,4 +327,71 @@ textarea {
     .main-container {
         padding: 16px;
     }
+}
+.profile-actions{
+  display:flex;
+  gap:10px;
+  margin: 12px 0 0;
+}
+
+/* MODAL */
+.modal{
+  position: fixed;
+  top:0; left:0;
+  width:100vw; height:100vh;
+  background: rgba(0,0,0,0.5);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index: 999;
+  backdrop-filter: blur(3px);
+}
+
+.modal_content{
+  background:#ffffff;
+  padding: 22px;
+  border-radius: 14px;
+  width: 320px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+.modal_input{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border-radius:10px;
+  border:1px solid #d1d5db;
+  font-family: inherit;
+}
+
+.modal_buttons{
+  margin-top: 14px;
+  display:flex;
+  gap:10px;
+}
+
+.modal_buttons button{
+  flex:1;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+}
+#confirm-yes, #edit-save{
+  background:#1f3af5;
+  color:white;
+}
+#confirm-no, #edit-cancel{
+  background:#e5e7eb;
+  color:#111827;
+}
+.app-footer{
+  bottom: 14px;
+  width: 100%;
+  text-align: center;
+  padding-top:10px;
+  font-size: 12px;
+  color: rgba(31, 41, 55, 0.65);
+  letter-spacing: 0.04em;
 }
