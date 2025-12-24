@@ -1,115 +1,188 @@
-
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!DOCTYPE html> 
+<html lang="en" dir="ltr"> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Makes the page responsive on mobile -->
     <title>Teacher Home Page</title>
-
-    <!-- Google Font for handwriting in Sticky Notes -->
-   
-<link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+    <!-- CSS file for styling this page -->
     <link rel="stylesheet" href="home.css">
 </head>
 <body>   
-
+    <!-- Main wrapper container for the whole teacher home layout -->
     <div class="home-container">
 
-    <!-- Header -->
-    <header class="home-header">
-        <div>
-            <h1>Hello Teacher <span id="teacher-name"></span></h1>
-            <p class="teacher-subject">
-                Subject: <span id="teacher-subject"></span>
-            </p>
-            <p id="current-time" class="time-display"></p>
+        <!-- Header section: greeting, teacher info, time, and logout button -->
+        <header class="home-header">
+
+            <!-- Left side content: greeting + subject + current time -->
+            <div>
+                <h1>
+                    Hello Teacher 
+                    <span id="teacher-name"></span> 
+                    <!-- This span is empty in HTML and will be filled by JS (home.js) with the teacher's name -->
+                </h1>
+                <p class="teacher-subject">
+                    Subject: <span id="teacher-subject"></span>
+                    <!-- This span is also filled by JS with teacher's subject -->
+                </p>
+                <p id="current-time" class="time-display"></p>
+                <!-- JS will likely update this element with the current date/time -->
+            </div>
+            <button id="logout-btn">Logout</button>
+            <!-- Logout button: JS listens to clicks here and performs logout (e.g., clear storage + redirect) -->
+        </header>
+
+        <!-- Main content area (3 sections: students, calendar, notes) -->
+        <main class="home-main">
+
+            <!-- 1) Students list + search + dropdown -->
+            <section class="students-section">
+                <h2>My Students</h2>
+
+                <!-- Search input for filtering students -->
+                <div class="search-bar">
+                    <label for="student-search">Search student:</label> 
+                    <!-- label "for" connects to input id="student-search" for accessibility -->
+
+                    <input type="text" id="student-search" placeholder="Type a student name">
+                    <!-- JS can listen to input events and filter #students-list -->
+                </div>
+
+                <!-- This box probably shows the currently selected student (populated by JS) -->
+                <div class="selected-student-box">
+                    <!-- Empty in HTML on purpose: JS inserts selected student details here -->
+                </div>
+
+                <!-- Dropdown container holding the actual student list -->
+                <div class="students-dropdown">
+                    <ul id="students-list"></ul>
+                    <!-- JS will add <li> items here for each student -->
+                </div>
+
+                <!-- Add Student form section -->
+                <div class="add-student-box">
+                    <h3>Add Student</h3>
+
+                    <form>
+                        <!-- Student name input:
+                             required = must be filled
+                             pattern = only English letters OR Hebrew letters + spaces
+                             title = message shown on validation failure -->
+                        <input
+                            id="new-student-name"
+                            type="text"
+                            placeholder="Full name"
+                            required
+                            pattern="^[A-Za-z\u0590-\u05FF ]+$"
+                            title="Name can contain letters and spaces only"
+                        >
+
+                        <!-- Phone input:
+                             type="tel" is for phone numbers
+                             pattern: must start with 05 and have 10 digits total -->
+                        <input
+                            id="new-student-phone"
+                            type="tel"
+                            placeholder="Phone (05XXXXXXXX)"
+                            required
+                            pattern="^05\d{8}$"
+                            title="Phone must be 10 digits and start with 05"
+                        >
+
+                        <!-- Email input:
+                             type="email" adds built-in email validation -->
+                        <input
+                            id="new-student-email"
+                            type="email"
+                            placeholder="Email"
+                            required
+                            title="Please enter a valid email address"
+                        >
+
+                        <!-- Grade/level input (free text) -->
+                        <input
+                            id="new-student-grade"
+                            type="text"
+                            placeholder="Grade / Level"
+                            required
+                        >
+                        <button id="add-student-btnadd-student-btn" type="submit">Add Student</button>
+                        <!-- type="submit" means clicking triggers the <form> submit event -->
+                    </form>
+                </div>
+            </section>
+
+            <!-- 2) Upcoming Classes (cards/stack container) -->
+            <section class="calendar-section">
+                <h2>Upcoming Classes</h2>
+
+                <div id="stack" class="stack-container"></div>
+                <!-- JS will generate and insert class cards into this container -->
+            </section>
+
+            <!-- 3) General Notes – Sticky Notes -->
+            <section class="notes-section">
+                <h2>General Notes</h2>
+
+                <!-- Input + button for adding a new note -->
+                <div class="add-note-box">
+                    <input type="text" id="new-note-input" placeholder="Type a new note">
+                    <!-- JS reads this value when adding a note -->
+
+                    <button id="add-note-btn">Add</button>
+                    <!-- JS listens to clicks here to create a new sticky note -->
+                </div>
+
+                <ul id="notes-list"></ul>
+                <!-- JS will render notes here (sticky notes) -->
+            </section>
+
+        </main>
+
+        <!-- Delete confirmation modal (hidden by default via CSS, shown by JS) -->
+        <div id="confirm_modal" class="modal">
+            <!-- Modal content box -->
+            <div class="modal_content">
+                <p id="modal_text">Are you sure?</p>
+                <!-- JS can change this text depending on what you're deleting -->
+
+                <div class="modal_buttons">
+                    <button id="confirm-yes">Yes</button>
+                    <!-- JS: user confirms delete -->
+
+                    <button id="confirm-no">Cancel</button>
+                    <!-- JS: user cancels delete -->
+                </div>
+            </div>
         </div>
 
-        <button id="logout-btn">Logout</button>
-    </header>
+        <!-- Edit note modal (for editing an existing note) -->
+        <div id="edit_modal" class="modal">
+            <div class="modal_content">
+                <p id="edit_notes"></p>
+                <!-- JS shows note title or "Editing note..." text here -->
 
-    <main class="home-main">
+                <input id="edit_input" type="text">
+                <!-- JS puts the current note text inside this input so you can edit it -->
 
-        <!-- 1. Students list + search + dropdown -->
+                <div class="modal_buttons">
+                    <button id="edit-save">Save</button>
+                    <!-- JS saves the edited text -->
 
-        <section class="students-section">
-            <h2>My Students</h2>
-
-            <div class="search-bar">
-                <label for="student-search">Search student:</label>
-                <input type="text" id="student-search" placeholder="Type a student name">
-            </div>
-
-            <div class="selected-student-box">
-                
-            </div>
-
-            <div class="students-dropdown">
-                
-                <ul id="students-list"></ul>
-            </div>
-            <div class="add-student-box">
-  <h3>Add Student</h3>
-        <form>
-            <input id="new-student-name" type="text" placeholder="Full name" required pattern="^[A-Za-z\u0590-\u05FF ]+$" title="Name can contain letters and spaces only">
-            <input id="new-student-phone" type="tel" placeholder="Phone (05XXXXXXXX)" required pattern="^05\d{8}$" title="Phone must be 10 digits and start with 05">
-            <input id="new-student-email" type="email" placeholder="Email" required title="Please enter a valid email address">
-            <input id="new-student-grade" type="text" placeholder="Grade / Level" required>
-            <button id="add-student-btnadd-student-btn" type="submit">Add Student</button>
-        </form>
-        </div>
-
-
-        </section>
-        <!-- 2. Upcoming Classes – cards -->
-        <section class="calendar-section">
-            <h2>Upcoming Classes</h2>
-            <div id="stack" class="stack-container"></div>
-        </section>
-
-        <!-- 3. General Notes – Sticky Notes -->
-        <section class="notes-section">
-            <h2>General Notes</h2>
-
-            <div class="add-note-box">
-                <input type="text" id="new-note-input" placeholder="Type a new note">
-                <button id="add-note-btn">Add</button>
-            </div>
-
-            <ul id="notes-list"></ul>
-        </section>
-
-    </main>
-<!-- delete confirmation modal Box-->
-    <div id="confirm_modal" class="modal">
-        <div class="modal_content">
-        
-         <p id="modal_text">Are you sure?</p>
-
-         <div class="modal_buttons">
-            <button id="confirm-yes">Yes</button>
-            <button id="confirm-no">Cancel</button>
-         </div>
-
-        </div>
-    </div>
-
-    <div id="edit_modal" class="modal">
-        <div class="modal_content">
-            <p id="edit_notes"></p>
-            <input id="edit_input" type="text">
-
-            <div class="modal_buttons">
-                <button id="edit-save">Save</button>
-                <button id="edit-cancel">Cancel</button>
+                    <button id="edit-cancel">Cancel</button>
+                    <!-- JS closes the modal without saving -->
+                </div>
             </div>
         </div>
-    </div>
-     <footer class="app-footer">
-        <span>© 2025 TutorHub</span>
-    </footer>
 
-<script src="home.js"></script>
+        <!-- Footer displayed at the bottom -->
+        <footer class="app-footer">
+            <span>© 2025 TutorHub</span> 
+        </footer>
+
+    </div> <!-- End of .home-container -->
+
+    <!-- handles dynamic content (students list, notes, time, modals, logout, etc.) -->
+    <script src="home.js"></script>
 </body>
 </html>
